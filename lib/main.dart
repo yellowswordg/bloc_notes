@@ -19,6 +19,11 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthBloc(
             authRepository: AuthRepository(),
           )..add(AppStarted()),
+        ),
+        BlocProvider<NotesBloc>(
+          create: (_) => NotesBloc(
+              authRepository: AuthRepository(),
+              notesRepository: NotesRepository()),
         )
       ],
       child: MaterialApp(
