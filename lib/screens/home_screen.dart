@@ -1,5 +1,8 @@
 import 'package:bloc_notes/blocs/auth/auth_bloc.dart';
-import 'package:bloc_notes/blocs/notes/notes_bloc.dart';
+import 'package:bloc_notes/blocs/blocs.dart';
+
+import 'package:bloc_notes/repositories/notes/notes_repository.dart';
+import 'package:bloc_notes/screens/screens.dart';
 import 'package:bloc_notes/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +21,22 @@ class HomeScreen extends StatelessWidget {
             builder: (context, notesState) {
               return _buildBody(context, autState, notesState);
             },
+          ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.black,
+            foregroundColor: Colors.white,
+            child: const Icon(Icons.add),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => BlocProvider<NoteDetailBloc>(
+                  create: (context) => NoteDetailBloc(
+                      authBloc: context.bloc<AuthBloc>(),
+                      notesRepository: NotesRepository()),
+                  child: NoteDetailScreen(),
+                ),
+              ),
+            ),
           ),
         );
       },
@@ -60,7 +79,18 @@ class HomeScreen extends StatelessWidget {
             noteState is NotesLoaded
                 ? NotesGrid(
                     notes: noteState.notes,
-                    onTap: (note) => print(note),
+                    onTap: (note) => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider<NoteDetailBloc>(
+                          create: (context) => NoteDetailBloc(
+                              authBloc: context.bloc<AuthBloc>(),
+                              notesRepository: NotesRepository())
+                            ..add(NoteLoaded(note: note)),
+                          child: NoteDetailScreen(),
+                        ),
+                      ),
+                    ),
                   )
                 : const SliverPadding(
                     padding: EdgeInsets.zero,
