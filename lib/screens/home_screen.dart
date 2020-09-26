@@ -1,3 +1,6 @@
+import 'package:bloc_notes/config/themes.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:bloc_notes/blocs/auth/auth_bloc.dart';
 import 'package:bloc_notes/blocs/blocs.dart';
 
@@ -5,7 +8,6 @@ import 'package:bloc_notes/repositories/notes/notes_repository.dart';
 import 'package:bloc_notes/screens/screens.dart';
 import 'package:bloc_notes/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -70,10 +72,7 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
               actions: [
-                IconButton(
-                  icon: Icon(Icons.brightness_4),
-                  onPressed: () => print('Change Theme'),
-                )
+                _buildThemeIconButton(context),
               ],
             ),
             noteState is NotesLoaded
@@ -87,7 +86,9 @@ class HomeScreen extends StatelessWidget {
                               authBloc: context.bloc<AuthBloc>(),
                               notesRepository: NotesRepository())
                             ..add(NoteLoaded(note: note)),
-                          child: NoteDetailScreen(),
+                          child: NoteDetailScreen(
+                            note: note,
+                          ),
                         ),
                       ),
                     ),
@@ -111,6 +112,21 @@ class HomeScreen extends StatelessWidget {
               )
             : const SizedBox.shrink(),
       ],
+    );
+  }
+
+  IconButton _buildThemeIconButton(BuildContext context) {
+    final bool isLightTheme = context.bloc<ThemeBloc>().state.themeData ==
+        Themes.themeData[AppTheme.LightTheme];
+
+    return IconButton(
+      onPressed: () {
+        context.bloc<ThemeBloc>().add(UpdateTheme());
+      },
+      icon: isLightTheme == true
+          ? Icon(Icons.brightness_4)
+          : Icon(Icons.brightness_5),
+      iconSize: 28.0,
     );
   }
 }

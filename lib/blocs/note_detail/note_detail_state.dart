@@ -31,7 +31,7 @@ class NoteDetailState {
       errorMessage: "",
     );
   }
-  factory NoteDetailState.submiting({@required Note note}) {
+  factory NoteDetailState.submitting({@required Note note}) {
     return NoteDetailState(
       note: note,
       isSubmiting: true,

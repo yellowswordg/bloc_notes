@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/blocs.dart';
+import 'config/themes.dart';
 import 'repositories/repositories.dart';
 import 'screens/home_screen.dart';
 
@@ -15,6 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (_) => ThemeBloc()..add(LoadTheme()),
+        ),
         BlocProvider<AuthBloc>(
           create: (_) => AuthBloc(
             authRepository: AuthRepository(),
@@ -26,15 +30,15 @@ class MyApp extends StatelessWidget {
               notesRepository: NotesRepository()),
         )
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Bloc Notes',
-        theme: ThemeData(
-          primaryColor: Colors.white,
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: HomeScreen(),
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Bloc Notes',
+            theme: state.themeData,
+            home: HomeScreen(),
+          );
+        },
       ),
     );
   }

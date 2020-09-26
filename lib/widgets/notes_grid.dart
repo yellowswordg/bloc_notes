@@ -35,7 +35,9 @@ class NotesGrid extends StatelessWidget {
 
   Widget _buildNote(Note note) {
     return GestureDetector(
-      onTap: () => onTap(note),
+      onTap: () {
+        onTap(note);
+      },
       child: Card(
         elevation: 10,
         shape: RoundedRectangleBorder(
@@ -64,7 +66,7 @@ class NotesGrid extends StatelessWidget {
             ],
           ),
         ),
-        color: Colors.orange,
+        color: note.color,
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:bloc_notes/blocs/blocs.dart';
 import 'package:bloc_notes/models/models.dart';
+import 'package:bloc_notes/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,12 +17,18 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
   final FocusNode _contentFocusNode = FocusNode();
   final TextEditingController _contentController = TextEditingController();
   final List<HexColor> _colors = [
-    
+    HexColor('#E74C3C'),
+    HexColor('#3498DB'),
+    HexColor('#27AE60'),
+    HexColor('#F6C924'),
+    HexColor('#8E44AD'),
   ];
 
   /// When we push add button on the HomeScreen we don't send a note inside
   /// NotesDetaiScreeen so [note] will be empty
-  bool get _isEditing => widget.note != null;
+  bool get _isEditing {
+    return widget.note != null;
+  }
 
   @override
   void initState() {
@@ -61,9 +68,9 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text('Error '),
+                  title: Text('Error'),
                   content: Text(state.errorMessage),
-                  actions: [
+                  actions: <Widget>[
                     FlatButton(
                       onPressed: () => Navigator.of(context).pop(),
                       child: Text('OK'),
@@ -77,35 +84,37 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
-              elevation: 0,
-              actions: <Widget>[_buildAction(context)],
+              elevation: 0.0,
+              actions: <Widget>[_buildAction()],
             ),
             body: SingleChildScrollView(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 left: 24.0,
                 right: 24.0,
                 top: 10.0,
                 bottom: 80.0,
               ),
               child: TextField(
-                focusNode: _contentFocusNode,
                 controller: _contentController,
-                style: TextStyle(
+                focusNode: _contentFocusNode,
+                style: const TextStyle(
                   fontSize: 18.0,
                   height: 1.2,
                 ),
                 decoration: const InputDecoration.collapsed(
-                    hintText: 'Write about anything'),
-                // Text will wrap endefinetly
+                  hintText: 'Write about anything :)',
+                ),
                 maxLines: null,
                 textCapitalization: TextCapitalization.sentences,
-                // It will be trigered whenever we type text in to this field
                 onChanged: (value) => context
                     .bloc<NoteDetailBloc>()
                     .add(NoteContentUpdated(content: value)),
               ),
             ),
-            bottomSheet: ColorPicker(state: state, colors: _colors),
+            bottomSheet: ColorPicker(
+              state: state,
+              colors: _colors,
+            ),
           );
         },
       ),
@@ -113,24 +122,26 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
   }
 
   // we check if the user is edetin the note
-  FlatButton _buildAction(BuildContext context) {
+  FlatButton _buildAction() {
     return _isEditing
         ? FlatButton(
-            onPressed: () => context.bloc<NoteDetailBloc>().add(
-                  NoteDeleted(),
-                ),
+            onPressed: () => context.bloc<NoteDetailBloc>().add(NoteDeleted()),
             child: Text(
               'Delete',
-              style: TextStyle(fontSize: 17.0, color: Colors.red),
+              style: const TextStyle(
+                fontSize: 17.0,
+                color: Colors.red,
+              ),
             ),
           )
         : FlatButton(
-            onPressed: () => context.bloc<NoteDetailBloc>().add(
-                  NoteAdded(),
-                ),
+            onPressed: () => context.bloc<NoteDetailBloc>().add(NoteAdded()),
             child: Text(
-              'add',
-              style: TextStyle(fontSize: 17.0, color: Colors.green),
+              'Add Note',
+              style: const TextStyle(
+                fontSize: 17.0,
+                color: Colors.green,
+              ),
             ),
           );
   }

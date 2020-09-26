@@ -97,7 +97,7 @@ class NoteDetailBloc extends Bloc<NoteDetailEvent, NoteDetailState> {
   }
 
   Stream<NoteDetailState> _mapNoteAddedToState() async* {
-    yield NoteDetailState.submiting(note: state.note);
+    yield NoteDetailState.submitting(note: state.note);
     try {
       await _notesRepository.addNote(note: state.note);
       yield NoteDetailState.success(note: state.note);
@@ -115,7 +115,7 @@ class NoteDetailBloc extends Bloc<NoteDetailEvent, NoteDetailState> {
   }
 
   Stream<NoteDetailState> _mapNoteSavedToState() async* {
-    yield NoteDetailState.submiting(note: state.note);
+    yield NoteDetailState.submitting(note: state.note);
     try {
       await _notesRepository.updateNote(note: state.note);
     } catch (e) {
@@ -134,20 +134,23 @@ class NoteDetailBloc extends Bloc<NoteDetailEvent, NoteDetailState> {
   }
 
   Stream<NoteDetailState> _mapNoteDeletedToState() async* {
-    yield NoteDetailState.submiting(note: state.note);
+    yield NoteDetailState.submitting(note: state.note);
     try {
       await _notesRepository.deleteNote(note: state.note);
+      yield NoteDetailState.success(note: state.note);
     } catch (e) {
       yield NoteDetailState.failure(
-          note: state.note, errorMessage: 'Note could note be deleted');
+        note: state.note,
+        errorMessage: 'Note could note be deleted',
+      );
+      yield state.update(
+        isSubmiting: false,
+        isFailure: false,
+        isSuccess: false,
+        errorMessage: "",
+      );
     }
     // after showing the error we want to show something so  we call state.update()
     // or we can just call it resert the state
-    yield state.update(
-      isSubmiting: false,
-      isFailure: false,
-      isSuccess: false,
-      errorMessage: "",
-    );
   }
 }
