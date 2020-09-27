@@ -12,10 +12,13 @@ part 'theme_event.dart';
 part 'theme_state.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
-  @override
-  // TODO: implement initialState
-  ThemeState get initialState =>
-      ThemeState(themeData: Themes.themeData[AppTheme.LightTheme]);
+  ThemeBloc(ThemeState initialState)
+      : super(ThemeState(themeData: Themes.themeData[AppTheme.LightTheme]));
+
+  // @override
+  // // TODO: implement initialState
+  // ThemeState get initialState =>
+  //     ThemeState(themeData: Themes.themeData[AppTheme.LightTheme]);
   @override
   Stream<ThemeState> mapEventToState(ThemeEvent event) async* {
     SharedPreferences prefs = await SharedPreferences.getInstance();

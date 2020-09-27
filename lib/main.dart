@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/blocs.dart';
+
+import 'blocs/blocs.dart';
 import 'config/themes.dart';
 import 'repositories/repositories.dart';
 import 'screens/home_screen.dart';
 
 void main() {
-  BlocSupervisor.delegate = SimpleBlocDelegate();
+  // BlocSupervisor.delegate = SimpleBlocDelegate();
   runApp(MyApp());
 }
 
@@ -17,7 +19,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => ThemeBloc()..add(LoadTheme()),
+          create: (_) => ThemeBloc(
+              ThemeState(themeData: Themes.themeData[AppTheme.LightTheme])),
         ),
         BlocProvider<AuthBloc>(
           create: (_) => AuthBloc(

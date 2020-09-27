@@ -19,10 +19,11 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
     @required AuthRepository authRepository,
     @required NotesRepository notesRepository,
   })  : _authRepository = authRepository,
-        _notesRepository = notesRepository;
+        _notesRepository = notesRepository,
+        super(NotesInitial());
 
-  @override
-  NotesState get initialState => NotesInitial();
+  // @override
+  // NotesState get initialState => NotesInitial();
 
   @override
   Stream<NotesState> mapEventToState(

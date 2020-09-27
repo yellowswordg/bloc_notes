@@ -18,9 +18,10 @@ class NoteDetailBloc extends Bloc<NoteDetailEvent, NoteDetailState> {
     @required AuthBloc authBloc,
     @required NotesRepository notesRepository,
   })  : _authBloc = authBloc,
-        _notesRepository = notesRepository;
-  @override
-  NoteDetailState get initialState => NoteDetailState.empty();
+        _notesRepository = notesRepository,
+        super(NoteDetailState.empty());
+  // @override
+  // NoteDetailState get initialState => NoteDetailState.empty();
   @override
   Stream<NoteDetailState> mapEventToState(NoteDetailEvent event) async* {
     if (event is NoteLoaded) {
